@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Threadline — live translation with Ghana NLP (Khaya)." />
+  <meta name="theme-color" content="#070a12" />
+  <title>Threadline — Ghana NLP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/app.css" />
+</head>
+<body>
+  <div class="shell">
+    <div class="glow" aria-hidden="true"></div>
+
+    <header class="hero">
+      <div class="hero__top">
+        <p class="hero__eyebrow">ARP · school hackathon</p>
+        <span id="conn-status" class="status-pill status-pill--neutral" role="status">Checking connection…</span>
+      </div>
+      <h1 class="hero__title">Threadline</h1>
+      <p class="hero__lede">
+        Throw a sentence in. Watch it re-thread through another language — powered by the
+        <strong>Ghana NLP</strong> translation API.
+      </p>
+    </header>
+
+    <div id="key-banner" class="key-banner hidden" role="status">
+      <span class="key-banner__dot" aria-hidden="true"></span>
+      <p>
+        <strong>API key needed.</strong>
+        Add your Khaya subscription key: either
+        <code>GHANA_NLP_SUBSCRIPTION_KEY</code> in a <code>.env</code> file (copy from
+        <code>.env.example</code>) and restart <code>npm run dev</code>, or
+        <code>SUBSCRIPTION_KEY</code> in <code>assets/js/config.js</code>, then refresh.
+      </p>
+    </div>
+
+    <div class="grid">
+      <div class="workspace">
+        <form id="translate-form" class="panel panel--lift" autocomplete="off" novalidate>
+          <div class="panel__head">
+            <span class="panel__label">Workspace</span>
+            <span class="panel__tag">POST /v1/translate</span>
+          </div>
+
+          <div class="lang-row">
+            <div class="field field--grow">
+              <label class="field__label" for="language-pair">Route</label>
+              <input
+                id="language-pair"
+                class="input input--mono"
+                type="text"
+                name="lang"
+                required
+                placeholder="en-tw"
+                value="en-tw"
+                spellcheck="false"
+              />
+            </div>
+            <button type="button" class="btn-icon" id="swap-lang" title="Swap direction (e.g. en-tw ↔ tw-en)">
+              <span aria-hidden="true">⇄</span>
+              <span class="visually-hidden">Swap language direction</span>
+            </button>
+          </div>
+
+          <div class="field field--compact">
+            <label class="field__label">Quick routes</label>
+            <div id="quick-routes" class="chips" role="group" aria-label="Common language pairs"></div>
+          </div>
+
+          <div class="field">
+            <label class="field__label">Starter sparks</label>
+            <div id="starter-chips" class="chips" role="group" aria-label="Example phrases"></div>
+          </div>
+
+          <div class="field">
+            <div class="field__label-row">
+              <label class="field__label" for="source-text">Source text</label>
+              <button type="button" class="btn-ghost btn-ghost--sm" id="dictate-btn" title="Speak into the textarea (Chrome or Edge recommended)">
+                Dictate
+              </button>
+            </div>
+            <textarea
+              id="source-text"
+              class="textarea"
+              name="in"
+              required
+              placeholder="Type something rich — or tap a spark above."
+            ></textarea>
+            <div class="row-hint">
+              <span></span>
+              <span><span id="char-count">0</span> / <span id="char-max">1000</span></span>
+            </div>
+          </div>
+
+          <button type="submit" class="btn-primary" id="submit-translate">
+            Run translation
+          </button>
+          <p class="submit-hint">
+            <kbd class="kbd">Ctrl</kbd><span class="submit-hint__or"> / </span><kbd class="kbd">⌘</kbd> +
+            <kbd class="kbd">Enter</kbd>
+            to translate
+          </p>
+        </form>
+
+        <section class="panel panel--lift panel--output" aria-live="polite">
+          <div class="panel__head">
+            <span class="panel__label">Thread</span>
+            <div class="output-actions">
+              <button type="button" class="btn-ghost btn-ghost--sm" id="copy-out" disabled>
+                Copy
+              </button>
+              <button type="button" class="btn-ghost btn-ghost--sm" id="speak-out" disabled>
+                Speak
+              </button>
+            </div>
+          </div>
+          <div class="translation-wrap">
+            <div id="translation-loading" class="translation-loading hidden" aria-hidden="true">
+              <div class="skeleton-line skeleton-line--lg"></div>
+              <div class="skeleton-line"></div>
+              <div class="skeleton-line skeleton-line--sm"></div>
+            </div>
+            <p id="translation-output" class="translation translation--placeholder" role="status">
+              Translation lands here — keep the thread going.
+            </p>
+          </div>
+          <div id="error-banner" class="error-banner" role="alert"></div>
+        </section>
+      </div>
+
+      <aside class="pulse-column">
+        <div class="panel panel--pulse">
+          <div class="panel__head panel__head--stack">
+            <div class="panel__head-row">
+              <span class="panel__label">Pulse</span>
+              <button type="button" class="btn-link" id="clear-pulse">Clear history</button>
+            </div>
+            <span class="panel__hint">Recent threads · stored on this device only</span>
+          </div>
+          <ul id="pulse-list" class="pulse-list"></ul>
+          <p id="pulse-empty" class="pulse-empty">No threads yet. Translate something to populate the pulse.</p>
+        </div>
+      </aside>
+    </div>
+
+    <footer class="product-footer">
+      <div class="product-footer__inner">
+        <span class="product-footer__name">Threadline</span>
+        <span class="product-footer__version" id="product-version"></span>
+        <span class="product-footer__sep" aria-hidden="true">·</span>
+        <span class="product-footer__powered">Powered by Ghana NLP (Khaya)</span>
+      </div>
+    </footer>
+
+    <footer class="footnotes">
+      <details>
+        <summary>Language codes</summary>
+        <p class="footnotes__codes">
+          <code>en</code> English · <code>tw</code> Twi · <code>gaa</code> Ga · <code>ee</code> Ewe ·
+          <code>fat</code> Fante · <code>dag</code> Dagbani · <code>gur</code> Gurune ·
+          <code>yo</code> Yoruba · <code>ki</code> Kikuyu · <code>luo</code> Luo ·
+          <code>mer</code> Kimeru · <code>kus</code> Kusaal
+        </p>
+      </details>
+      <p class="footnotes__codes footnotes__spec">
+        OpenAPI:
+        <a href="specs/ghananlp-translation-webservice-api.json">specs/ghananlp-translation-webservice-api.json</a>
+      </p>
+    </footer>
+  </div>
+
+  <div id="toast-host" class="toast-host" aria-live="polite"></div>
+
+  <script type="module" src="assets/js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+{
+  "name": "ghana-nlp-translate-ui",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Static web UI for the Ghana NLP Translation API",
+  "scripts": {
+    "dev": "node server.mjs",
+    "start": "npm run dev",
+    "serve:static": "npx --yes serve . -l 3000"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
