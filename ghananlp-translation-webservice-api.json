@@ -1,0 +1,230 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Translation API",
+        "version": "v1",
+        "description": "The Khaya AI Translation REST API",
+        "termsOfService": "https://algorine.com/termsofuse/",
+        "contact": {
+            "name": "Khaya A.I",
+            "url": "https://khaya.ai/",
+            "email": "subscriptions@khaya.ai"
+        },
+        "license": {
+            "name": "End User License Agreement (EULA)",
+            "url": "https://algorine.com/termsofuse/"
+        }
+    },
+    "host": "translation-api.ghananlp.org",
+    "basePath": "/v1",
+    "schemes": [
+        "https"
+    ],
+    "securityDefinitions": {
+        "apiKeyHeader": {
+            "type": "apiKey",
+            "name": "Ocp-Apim-Subscription-Key",
+            "in": "header"
+        },
+        "apiKeyQuery": {
+            "type": "apiKey",
+            "name": "subscription-key",
+            "in": "query"
+        }
+    },
+    "security": [
+        {
+            "apiKeyHeader": []
+        },
+        {
+            "apiKeyQuery": []
+        }
+    ],
+    "paths": {
+        "/translate": {
+            "post": {
+                "description": "Translates given input string",
+                "operationId": "post-translate",
+                "summary": "Translates given input string",
+                "parameters": [
+                    {
+                        "name": "translate",
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/translate"
+                        },
+                        "description": "Translates given input string"
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/translationResponse"
+                        },
+                        "examples": {
+                            "application/json": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/responseError"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "type": "Error type",
+                                "message": "Error message"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/languages": {
+            "get": {
+                "description": "Get languages list",
+                "operationId": "get-languages-list",
+                "summary": "Get languages list",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of language codes with corresponding language name",
+                        "schema": {
+                            "$ref": "#/definitions/Language Listing"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "languages": {
+                                    "en": "English",
+                                    "tw": "Twi",
+                                    "ee": "Ewe",
+                                    "gaa": "Ga",
+                                    "fat": "Fante",
+                                    "yo": "Yoruba",
+                                    "dag": "Dagbani",
+                                    "ki": "Kikuyu",
+                                    "gur": "Gurune",
+                                    "luo": "Luo",
+                                    "mer": "Kimeru",
+                                    "kus": "Kusaal"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "translationResponse": {
+            "type": "string",
+            "description": "Translated text"
+        },
+        "responseError": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "description": "Error type"
+                },
+                "message": {
+                    "type": "string",
+                    "description": "Error message"
+                }
+            },
+            "required": [
+                "type",
+                "message"
+            ],
+            "example": {
+                "type": "Error type",
+                "message": "Error message"
+            }
+        },
+        "translate": {
+            "type": "object",
+            "properties": {
+                "in": {
+                    "type": "string",
+                    "format": "string",
+                    "description": "Input string to be translated. Maximum length is 1000 characters",
+                    "maxLength": 1000
+                },
+                "lang": {
+                    "type": "string",
+                    "format": "string",
+                    "description": "Language pair tag ( from-to ). Language codes: English - en, Twi - tw, Ga - gaa, Ewe - ee, Fante - fat, Dagbani - dag, Gurene - gur, Yoruba - yo, Kikuyu - ki, Luo - luo, Kimeru - mer"
+                }
+            },
+            "required": [
+                "in",
+                "lang"
+            ],
+            "example": {
+                "in": "Translation text",
+                "lang": "en-tw"
+            }
+        },
+        "Language Listing": {
+            "type": "object",
+            "properties": {
+                "languages": {
+                    "type": "object",
+                    "properties": {
+                        "en": {
+                            "type": "string"
+                        },
+                        "tw": {
+                            "type": "string"
+                        },
+                        "ee": {
+                            "type": "string"
+                        },
+                        "gaa": {
+                            "type": "string"
+                        },
+                        "fat": {
+                            "type": "string"
+                        },
+                        "yo": {
+                            "type": "string"
+                        },
+                        "dag": {
+                            "type": "string"
+                        },
+                        "ki": {
+                            "type": "string"
+                        },
+                        "gur": {
+                            "type": "string"
+                        },
+                        "luo": {
+                            "type": "string"
+                        },
+                        "mer": {
+                            "type": "string"
+                        },
+                        "kus": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Translation Controller",
+            "description": "Everything about API translation"
+        }
+    ]
+}
