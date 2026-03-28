@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body,
+#root {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+
+body {
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 12px;
+  color: #111827;
+  background-color: #ffffff;
+}
