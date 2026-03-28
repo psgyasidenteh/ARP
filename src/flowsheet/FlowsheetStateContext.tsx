@@ -61,7 +61,7 @@ const defaultEdgeOptions = {
 
 function FlowsheetStateProvider({ children }: { children: ReactNode }) {
   const persisted = useMemo(() => loadFlowsheetFromStorage(), [])
-  const [nodes, setNodes, onNodesChange] = useNodesState<Node<FlowsheetNodeData>>(
+  const [nodes, setNodes, onNodesChange] = useNodesState<FlowsheetNodeData>(
     persisted?.nodes ?? [],
   )
   const [edges, setEdges, onEdgesChange] = useEdgesState(persisted?.edges ?? [])
